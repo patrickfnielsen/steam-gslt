@@ -1,4 +1,4 @@
-module github.com/csgoservers/steam-gslt
+module github.com/patrickfnielsen/steam-gslt
 
 go 1.16
 
