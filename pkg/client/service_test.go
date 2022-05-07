@@ -32,5 +32,5 @@ func TestServiceUrl(t *testing.T) {
 		}
 	})
 	service := &gameServerService{client, "http://localhost", "abc"}
-	service.get("hello")
+	service.get("hello", nil)
 }

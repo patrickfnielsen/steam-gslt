@@ -31,13 +31,14 @@ func newService(key string) *gameServerService {
 }
 
 // get executes a request to retrieve some data from the service
-func (g *gameServerService) get(method string) ([]byte, error) {
-	url := g.buildURL(method)
+func (g *gameServerService) get(method string, data url.Values) ([]byte, error) {
+	url := g.buildURL(method, data)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	res, err := g.http.Do(req)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func (g *gameServerService) get(method string) ([]byte, error) {
 
 // post executes a requests to change data using the Steam service
 func (g *gameServerService) post(method string, data url.Values) ([]byte, error) {
-	url := g.buildURL(method)
+	url := g.buildURL(method, nil)
 
 	req, err := http.NewRequest(http.MethodPost, url, strings.NewReader(data.Encode()))
 	if err != nil {
@@ -71,8 +72,13 @@ func (g *gameServerService) post(method string, data url.Values) ([]byte, error)
 	return g.unmarshalData(body)
 }
 
-func (g *gameServerService) buildURL(method string) string {
-	return fmt.Sprintf("%s/%s/%s?key=%s", g.url, method, "v1", g.key)
+func (g *gameServerService) buildURL(method string, data url.Values) string {
+	if data == nil {
+		data = url.Values{}
+	}
+
+	data.Add("key", g.key)
+	return fmt.Sprintf("%s/%s/%s?%s", g.url, method, "v1", data.Encode())
 }
 
 // unmarshalData is responsible to extract the data from the response

@@ -25,7 +25,7 @@ func New(apiKey string) *SteamService {
 // GetAccountList returns a list of game server accounts with their
 // connection tokens.
 func (s *SteamService) GetAccountList() (*api.Account, error) {
-	result, err := s.service.get("GetAccountList")
+	result, err := s.service.get("GetAccountList", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func (s *SteamService) QueryLoginToken(loginToken string) (*api.Account, error) 
 	data := url.Values{}
 	data.Add("login_token", loginToken)
 
-	result, err := s.service.post("QueryLoginToken", data)
+	result, err := s.service.get("QueryLoginToken", data)
 	if err != nil {
 		return nil, err
 	}
